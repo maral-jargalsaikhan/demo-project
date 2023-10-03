@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.card-tag {
+    position: absolute;
+    right: 10px;
+    top: 110px;
+}
