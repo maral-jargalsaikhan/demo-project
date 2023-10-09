@@ -4,7 +4,7 @@ import { UserAuth } from "../contexts/AuthContext";
 import Spinner from "../components/Spinner";
 import { SettingOutlined } from "@ant-design/icons";
 
-const page = () => {
+const Page = () => {
   const { loading, user } = UserAuth();
 
   return (
@@ -23,4 +23,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

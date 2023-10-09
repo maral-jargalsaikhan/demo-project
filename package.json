@@ -18,6 +18,8 @@
     "react": "latest",
     "react-dom": "latest",
     "react-icons": "^4.11.0",
+    "react-router-dom": "^6.16.0",
+    "semantic-ui-react": "^2.1.4",
     "uuid": "^9.0.1",
     "youtube-video-js": "^4.0.1"
   },
