@@ -17,7 +17,6 @@ const Login = () => {
   const handleCancel = () => setIsOpen(false);
 
   const loginHandler = async () => {
-    console.log("clicked on Login");
     try {
       await loginGoogle();
     } catch (error) {

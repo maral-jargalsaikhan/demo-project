@@ -3,53 +3,58 @@ import React, { useEffect, useState } from "react";
 import { UserAuth } from "../contexts/AuthContext";
 import Spinner from "../components/Spinner";
 import { VideoCameraOutlined } from "@ant-design/icons";
-import AddLesson from "./components/AddLesson";
-import { Button, Card, Tag } from "antd";
-import { collection, getDocs } from "firebase/firestore"
+import AddLesson from "../components/AddLesson";
+import { Button, Card, Tag, Tooltip } from "antd";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase.config";
+import { motion } from "framer-motion";
+import "youtube-video-js";
 
-const tagColor = {
-  "Web Development": "green",
-  "Mobile Development": "blue",
-  "UX & UI Design": "red",
-  "Other": "lime"
+const tagColor = (category) => {
+  switch (category) {
+    case "Web Development":
+      return "gold";
+    case "Mobile Development":
+      return "blue";
+    case "UX & UI Design":
+      return "red";
+    case "Other":
+      return "cyan";
+    default:
+      return "";
+  }
 };
 
-// TEST
+const container = {
+  hidden: { opacity: 1, scale: 0 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { delayChildren: 0.3, staggerChildren: 0.2 },
+  },
+};
 
-// const itemsRef = collection(db, "items");
-// const itemsSnap = getDoc(itemsRef);
-
-// const seeData = () => {
-//   console.log("DATA: ", itemsSnap);
-// };
-
-// async function getLessons() {
-//   try {
-//     const lessonsRef = collection(db, "lessons");
-//     let allLessons = await getDoc(lessonsRef);
-//     console.log("ALL LESSONS: ", allLessons);
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
-async function getLessons() {
-  const snapshot = await firebase.firestore().collection('lessons').get()
-  const collection = {};
-  snapshot.forEach(doc => {
-      collection[doc.id] = doc.data();
-  });
-  return collection;
-}
-
-// const categoryColor = tagColor[lesson.category];
-
-// TEST
-
-const { Meta } = Card;
+const item = { hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } };
 
 const Page = () => {
   const { loading, user } = UserAuth();
+  const [lessons, setLessons] = useState([]);
+
+  useEffect(() => {
+    const getLessons = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "lessons"));
+        const lessonsData = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setLessons(lessonsData);
+      } catch (err) {
+        console.log("error: ", err.message);
+      }
+    };
+    getLessons();
+  }, []);
 
   return (
     <div>
@@ -59,68 +64,57 @@ const Page = () => {
         <p>You must be logged in to view this page.</p>
       ) : (
         <div>
-          <Button type="dashed" onClick={getLessons} className="mb-5">
-            GET ALL LESSONS
-          </Button>
+          <div className="flex justify-between items-center">
+            <h1 className="mb-5 ml-1 flex gap-3 font-semibold ">
+              <VideoCameraOutlined />
+              LMS
+            </h1>
+            <AddLesson />
+          </div>
 
-          <h1 className="mb-5 ml-1 flex gap-3 font-semibold ">
-            <VideoCameraOutlined />
-            LMS
-          </h1>
-          <AddLesson />
-
-          <ul className="w-full h-10 mt-5">
-            <li>
-              {/* <Card
-                hoverable
-                style={{ width: 240 }}
-                cover={
-                  <iframe
-                    className="rounded-t-lg"
-                    src="https://www.youtube.com/embed/W6NZfCO5SIk?si=GtgIaXr02-bu_IIx"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen
-                  ></iframe>
-                }
-              >
-                <Meta
-                  title="Europe Street beat"
-                  description="Lorem ipsum dolor, sit amet consectetur adipisicing elit..."
-                  style={{ display: "flex", gap: 0 }}
-                />
-                <Tag color="volcano" className="card-tag">
-                  Category
-                </Tag>
-              </Card> */}
-            </li>
-          </ul>
-
-          {/* <ul className="w-full h-10 mt-5">
-            {allLessons.map((lesson, id) => {
-              <li key={id}>
+          <motion.ul
+            className="container mt-5 max-w-[950px] flex flex-wrap gap-4 justify-between m-auto leading-10"
+            variants={container}
+            initial="hidden"
+            animate="visible"
+          >
+            {lessons.map((lesson, id) => (
+              <motion.li key={id} variants={item}>
                 <Card
-                  hoverable
-                  style={{ width: 240 }}
+                  style={{
+                    width: 220,
+                    height: 300,
+                    marginBottom: 10,
+                    padding: 0,
+                  }}
                   cover={
-                    <iframe
-                      className="rounded-t-lg"
-                      src={lesson.link}
-                      allowfullscreen
-                    ></iframe>
+                    <youtube-video width="220" height="150" src={lesson.link} />
                   }
                 >
-                  <Meta
-                    title={lesson.title}
-                    description={`${lesson.description.slice(0, 30)}`}
-                    style={{ display: "flex", gap: 0 }}
-                  />
-                  <Tag className="card-tag" color={categoryColor}>
-                    {lesson.category}
-                  </Tag>
+                  <div className="h-[120px] flex flex-col justify-between">
+                    <div>
+                      <Tooltip title={lesson.title}>
+                        <a href={lesson.link} className="font-semibold">
+                          {lesson.title.length > 20
+                            ? `${lesson.title.slice(0, 19)}...`
+                            : lesson.title}
+                        </a>
+                      </Tooltip>
+
+                      <p className="text-neutral-500 ">
+                        {lesson.description.slice(0, 65)}...
+                      </p>
+                    </div>
+                    <div className="flex">
+                      <Tag color={tagColor(lesson.category)}>
+                        {lesson.category}
+                      </Tag>
+                    </div>
+                  </div>
                 </Card>
-              </li>;
-            })}
-          </ul> */}
+              </motion.li>
+            ))}
+          </motion.ul>
         </div>
       )}
     </div>

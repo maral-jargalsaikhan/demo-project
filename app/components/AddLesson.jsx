@@ -1,6 +1,6 @@
-import { Button, Drawer, Form, Input, Select } from "antd";
+import { Button, Drawer, Form, Input, Select, Upload } from "antd";
 import React, { useEffect, useState } from "react";
-import { UserAuth } from "../../contexts/AuthContext";
+import { UserAuth } from "../contexts/AuthContext";
 import { LinkOutlined, PlusOutlined, YoutubeOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import {
@@ -11,81 +11,72 @@ import {
   onSnapshot,
   query,
 } from "firebase/firestore";
-import { ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import { db, storage } from "@/app/firebase.config";
 
 const AddLesson = () => {
   const { user } = UserAuth();
-  const [form] = Form.useForm();
+  // const [form] = Form.useForm();
   const [isOpen, setIsOpen] = useState(false);
-  // const [imageUpload, setImageUpload] = useState(null);
-
+  const [imageUpload, setImageUpload] = useState(null);
   const [lessons, setLessons] = useState([]);
   const [newLesson, setNewLesson] = useState({
     title: "",
     description: "",
-    // image: "",
+    image: "",
     link: "",
     category: "",
     created_in: "",
     created_by: "",
   });
 
-  // const uploadImage = () => {
-  //   if (imageUpload == null) return null;
-
-  //   const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
-  //   return uploadBytes(imageRef, imageUpload);
-  // };
-
   const addNewLesson = async (e) => {
     e.preventDefault();
     try {
       if (
-        newLesson.title !== "" &&
-        newLesson.description !== "" &&
-        newLesson.category !== "" &&
-        newLesson.link !== ""
+        !newLesson.title ||
+        !newLesson.description ||
+        !newLesson.category ||
+        !newLesson.link
       ) {
-        // const imageUploadTask = uploadImage();
-        // if (imageUploadTask) {
-        //   await imageUploadTask;
-        // }
-        // const imageRef = imageUploadTask ? imageUploadTask.snapshot.ref : null;
-        // const imageURL = imageRef ? getDownloadURL(imageRef) : null;
-
-        const docRef = await addDoc(collection(db, "lessons"), {
-          title: newLesson.title.trim(),
-          description: newLesson.description.trim(),
-          // image: imageURL,
-          link: newLesson.link,
-          category: newLesson.category,
-          created_in: new Date().toLocaleDateString(),
-          created_by: `${user.displayName}`,
-        });
-
-        console.log("new lesson: ", newLesson);
-        alert("new lesson successfully added");
-
-        setNewLesson({
-          title: "",
-          description: "",
-          // image: "",
-          link: "",
-          category: "",
-          created_in: "",
-          created_by: "",
-        });
-      } else {
-        console.log("Form fields are not complete");
+        console.log("all fields are not completed");
+        return;
       }
+      // const imageUploadTask = uploadImage();
+
+      // if (imageUploadTask) {
+      //   await imageUploadTask;
+      //   const imageRef = imageUploadTask.snapshot.ref;
+      //   newLesson.image = await getDownloadURL(imageRef);
+      // }
+
+      const lessonData = {
+        title: newLesson.title.trim(),
+        description: newLesson.description.trim(),
+        // image: newLesson.image,
+        link: newLesson.link,
+        category: newLesson.category,
+        created_in: new Date().toLocaleDateString(),
+        created_by: user.displayName,
+      };
+
+      const docRef = await addDoc(collection(db, "lessons"), lessonData);
+
+      alert("new lesson successfully added to database");
+
+      setNewLesson({
+        title: "",
+        description: "",
+        // image: "",
+        link: "",
+        category: "",
+      });
     } catch (error) {
-      console.error("error on add document: ", error);
+      console.log("error on add new lesson: ", error);
     }
   };
 
-  // READ LESSONS FROM DB
   useEffect(() => {
     const q = query(collection(db, "lessons"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -133,6 +124,8 @@ const AddLesson = () => {
             <Input
               type="text"
               value={newLesson.title}
+              showCount
+              maxLength={30}
               onChange={(e) =>
                 setNewLesson({ ...newLesson, title: e.target.value })
               }
@@ -143,6 +136,8 @@ const AddLesson = () => {
           <div className="flex flex-col gap-1">
             <label>Description</label>
             <TextArea
+              showCount
+              maxLength={250}
               value={newLesson.description}
               onChange={(e) =>
                 setNewLesson({ ...newLesson, description: e.target.value })
