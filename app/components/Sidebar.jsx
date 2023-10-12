@@ -6,7 +6,6 @@ import {
   HomeOutlined,
   UnorderedListOutlined,
   VideoCameraOutlined,
-  UserSwitchOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
 import { UserAuth } from "../contexts/AuthContext";
@@ -21,11 +20,6 @@ const navLinks = [
     icon: <HomeOutlined />,
     title: "Overview",
     href: "/",
-  },
-  {
-    icon: <UserSwitchOutlined />,
-    title: "User CRUD",
-    href: "/user-crud",
   },
   {
     icon: <VideoCameraOutlined />,
