@@ -1,12 +1,22 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { VideoCameraOutlined } from "@ant-design/icons";
+import { UserAddOutlined, VideoCameraOutlined } from "@ant-design/icons";
 import AddEdit from "./AddEdit";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { motion } from "framer-motion";
-import { Tag, Card, Image, Modal, Segmented } from "antd";
+import {
+  Tag,
+  Card,
+  Image,
+  Modal,
+  Segmented,
+  Button,
+  Breadcrumb,
+  Rate,
+} from "antd";
 import "youtube-video-js";
+import Spinner from "../components/Spinner";
 
 const tagColor = (category) => {
   switch (category) {
@@ -37,21 +47,27 @@ const item = { hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } };
 const Page = () => {
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [sort, setSort] = useState("All");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedLesson, setSelectedLesson] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const handleOk = () => {
-    setIsModalOpen(false);
+  const openModal = (lesson) => {
+    setSelectedLesson(lesson);
   };
-  const handleCancel = () => {
-    setIsModalOpen(false);
+
+  const closeModal = () => {
+    setSelectedLesson(null);
+  };
+
+  const handleCategory = (e) => {
+    setSelectedCategory(e);
   };
 
   useEffect(() => {
     setLoading(true);
+    loading && <Spinner />;
+
     const unsubscribe = onSnapshot(
-      collection(db, "lectures"),
+      collection(db, "lessons"),
       (snapshot) => {
         let list = [];
         snapshot.docs.forEach((doc) => {
@@ -73,11 +89,6 @@ const Page = () => {
     { label: "Other", value: "Other" },
   ];
 
-  const handleCategory = (e) => {
-    setSelectedCategory(e);
-    console.log("chosen category: ", e);
-  };
-
   return (
     <>
       <div>
@@ -91,11 +102,14 @@ const Page = () => {
 
         <div className="flex justify-between">
           <h2 className="ml-1 font-semibold flex items-center">All Lessons</h2>
-          <Segmented options={sortOptions} onClick={handleCategory} />
+          <Segmented
+            options={sortOptions}
+            onChange={(e) => handleCategory(e)}
+          />
         </div>
 
         <motion.ul
-          className="container mt-5 max-w-[950px] flex flex-wrap gap-4 justify-between m-auto leading-10"
+          className="container my-10 mx-auto max-w-[940px] flex flex-wrap gap-5"
           variants={container}
           initial="hidden"
           animate="visible"
@@ -110,19 +124,19 @@ const Page = () => {
               <motion.li key={id} variants={item}>
                 <Card
                   hoverable
-                  style={{ width: 220, height: 330 }}
+                  style={{ width: 220, height: 360 }}
                   cover={
                     <Image
                       alt="card-image"
                       src={lesson.img}
-                      height={180}
+                      height={210}
                       className="object-cover border"
                     />
                   }
                 >
                   <div
                     className="h-[120px] flex flex-col justify-between"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => openModal(lesson)}
                   >
                     <p className="font-semibold">
                       {lesson.title.length > 20
@@ -141,16 +155,51 @@ const Page = () => {
                   </div>
                 </Card>
 
-                <Modal
-                  title={lesson.title}
-                  open={isModalOpen}
-                  onOk={handleOk}
-                  onCancel={handleCancel}
-                  width={1000}
-                  footer={[]}
-                >
-                  <youtube-video width="220" height="150" src={lesson.URL} />
-                </Modal>
+                {selectedLesson && (
+                  <Modal
+                    title={selectedLesson.title}
+                    open={selectedLesson === lesson}
+                    onOk={closeModal}
+                    onCancel={closeModal}
+                    width={1000}
+                    footer={[]}
+                  >
+                    <>
+                      <Breadcrumb
+                        className="flex my-5 justify-end"
+                        items={[
+                          { title: "LMS" },
+                          { title: `${selectedLesson.category}` },
+                          { title: `${selectedLesson.title}` },
+                        ]}
+                      />
+                      <div className="w-full flex justify-center my-5">
+                        <youtube-video
+                          width="800"
+                          height="400"
+                          src={selectedLesson.URL}
+                        />
+                      </div>
+                      <div className="flex justify-between items-center mt-5">
+                        <h1 className="text-xl font-semibold">
+                          {selectedLesson.title}
+                        </h1>
+
+                        <h2 className="flex gap-2 text-neutral-500 font-semibold items-center">
+                          <UserAddOutlined />
+                          {selectedLesson.created_by}
+                        </h2>
+                      </div>
+                      <Rate className="flex justify-end" />
+                      <p className="my-5 text-justify ">
+                        {selectedLesson.description}
+                      </p>
+                      <Tag color={tagColor(selectedLesson.category)}>
+                        {selectedLesson.category}
+                      </Tag>
+                    </>
+                  </Modal>
+                )}
               </motion.li>
             ))}
         </motion.ul>

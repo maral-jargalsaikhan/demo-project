@@ -5,6 +5,7 @@ import { db, storage } from "../firebase.config";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import TextArea from "antd/es/input/TextArea";
 import { UserAuth } from "../contexts/AuthContext";
+import { data } from "autoprefixer";
 
 const initialState = {
   title: "",
@@ -22,6 +23,7 @@ const AddEdit = () => {
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(null);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [embedLink, setEmbedLink] = useState("");
 
   useEffect(() => {
     const uploadFile = () => {
@@ -46,7 +48,6 @@ const AddEdit = () => {
         }
       );
     };
-
     file && uploadFile();
   }, [file]);
 
@@ -57,13 +58,25 @@ const AddEdit = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmit(true);
-    await addDoc(collection(db, "lectures"), {
+    await addDoc(collection(db, "lessons"), {
       ...data,
       timestamp: serverTimestamp(),
       created_by: user.displayName,
     });
     alert("successfully added");
     setData(initialState);
+  };
+
+  const handleURLChange = (e) => {
+    const link = e.target.value;
+    const linkID = link.split("v="[1]);
+    const embedLink = linkID
+      ? `https://www.youtube.com/embed/${linkID[1]}`
+      : "";
+
+    console.log("embedLink: ", embedLink);
+
+    setData({ ...data, URL: embedLink });
   };
 
   const categories = [
@@ -139,9 +152,8 @@ const AddEdit = () => {
               rules={[{ required: true, message: "Please input your URL!" }]}
             >
               <Input
-                placeholder="Enter URL"
-                name="URL"
-                onChange={handleChange}
+                placeholder="https://www.youtube.com/watch?"
+                onChange={handleURLChange}
                 value={URL}
               />
             </Form.Item>

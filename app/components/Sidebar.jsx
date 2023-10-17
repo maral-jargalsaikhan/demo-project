@@ -50,7 +50,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex fixed">
       <div className="h-screen px-5 py-8 bg-white border-r-[1px] flex flex-col justify-between">
         <div className="flex flex-col items-center h-full justify-between ">
           <ul className="flex flex-col gap-5">

@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
       <AuthContextProvider>
         <body className="flex w-full gap-5 bg-neutral-100 pr-5">
           <Sidebar />
-          <div className="min-h-[500px] w-full">
+          <div className="min-h-[500px] w-full ml-[220px]">
             <Header />
             <main className="p-5 min-h-[650px] bg-white rounded-lg">
               {children}
