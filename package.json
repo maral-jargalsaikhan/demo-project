@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@ant-design/plots": "^1.2.5",
     "antd": "^5.9.3",
     "antd-img-crop": "^4.13.0",
     "firebase": "^10.4.0",
