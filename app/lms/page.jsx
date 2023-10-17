@@ -39,6 +39,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [sort, setSort] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -73,7 +74,7 @@ const Page = () => {
   ];
 
   const handleCategory = (e) => {
-    setSort(e);
+    setSelectedCategory(e);
     console.log("chosen category: ", e);
   };
 
@@ -99,53 +100,59 @@ const Page = () => {
           initial="hidden"
           animate="visible"
         >
-          {lessons.map((lesson, id) => (
-            <motion.li key={id} variants={item}>
-              <Card
-                hoverable
-                style={{ width: 220, height: 330 }}
-                cover={
-                  <Image
-                    alt="card-image"
-                    src={lesson.img}
-                    height={180}
-                    className="object-cover border"
-                  />
-                }
-              >
-                <div
-                  className="h-[120px] flex flex-col justify-between"
-                  onClick={() => setIsModalOpen(true)}
+          {lessons
+            .filter(
+              (lesson) =>
+                selectedCategory === "All" ||
+                lesson.category === selectedCategory
+            )
+            .map((lesson, id) => (
+              <motion.li key={id} variants={item}>
+                <Card
+                  hoverable
+                  style={{ width: 220, height: 330 }}
+                  cover={
+                    <Image
+                      alt="card-image"
+                      src={lesson.img}
+                      height={180}
+                      className="object-cover border"
+                    />
+                  }
                 >
-                  <p className="font-semibold">
-                    {lesson.title.length > 20
-                      ? `${lesson.title.slice(0, 19)}...`
-                      : lesson.title}
-                  </p>
+                  <div
+                    className="h-[120px] flex flex-col justify-between"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    <p className="font-semibold">
+                      {lesson.title.length > 20
+                        ? `${lesson.title.slice(0, 19)}...`
+                        : lesson.title}
+                    </p>
 
-                  <p className="text-neutral-500 ">
-                    {lesson.description.slice(0, 65)}...
-                  </p>
-                  <div className="flex mt-2">
-                    <Tag color={tagColor(lesson.category)}>
-                      {lesson.category}
-                    </Tag>
+                    <p className="text-neutral-500 ">
+                      {lesson.description.slice(0, 65)}...
+                    </p>
+                    <div className="flex mt-2">
+                      <Tag color={tagColor(lesson.category)}>
+                        {lesson.category}
+                      </Tag>
+                    </div>
                   </div>
-                </div>
-              </Card>
+                </Card>
 
-              <Modal
-                title={lesson.title}
-                open={isModalOpen}
-                onOk={handleOk}
-                onCancel={handleCancel}
-                width={1000}
-                footer={[]}
-              >
-                <youtube-video width="220" height="150" src={lesson.URL} />
-              </Modal>
-            </motion.li>
-          ))}
+                <Modal
+                  title={lesson.title}
+                  open={isModalOpen}
+                  onOk={handleOk}
+                  onCancel={handleCancel}
+                  width={1000}
+                  footer={[]}
+                >
+                  <youtube-video width="220" height="150" src={lesson.URL} />
+                </Modal>
+              </motion.li>
+            ))}
         </motion.ul>
       </div>
     </>
