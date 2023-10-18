@@ -28,8 +28,8 @@ const navLinks = [
   },
   {
     icon: <UnorderedListOutlined />,
-    title: "Expence tracker",
-    href: "/expence-tracker",
+    title: "Expense tracker",
+    href: "/expense-tracker",
   },
   {
     icon: <SettingOutlined />,
