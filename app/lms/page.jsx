@@ -5,16 +5,7 @@ import AddEdit from "./AddEdit";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { motion } from "framer-motion";
-import {
-  Tag,
-  Card,
-  Image,
-  Modal,
-  Segmented,
-  Button,
-  Breadcrumb,
-  Rate,
-} from "antd";
+import { Tag, Card, Image, Modal, Segmented, Breadcrumb, Rate } from "antd";
 import "youtube-video-js";
 import Spinner from "../components/Spinner";
 
@@ -96,13 +87,13 @@ const Page = () => {
         <div className="flex justify-between">
           <h1 className="mb-5 ml-1 flex gap-3 font-semibold ">
             <VideoCameraOutlined />
-            LMS
+            Sample LMS
           </h1>
           <AddEdit />
         </div>
 
         <div className="flex justify-between">
-          <h2 className="ml-1 font-semibold flex items-center">All Lessons</h2>
+          <h2 className="ml-1 font-semibold flex items-center">LESSONS</h2>
           <Segmented
             options={sortOptions}
             onChange={(e) => handleCategory(e)}
@@ -148,6 +139,7 @@ const Page = () => {
                     <p className="text-neutral-500 ">
                       {lesson.description.slice(0, 65)}...
                     </p>
+
                     <div className="flex mt-2">
                       <Tag color={tagColor(lesson.category)}>
                         {lesson.category}
@@ -181,6 +173,7 @@ const Page = () => {
                           src={selectedLesson.URL}
                         />
                       </div>
+
                       <div className="flex justify-between items-center mt-5">
                         <h1 className="text-xl font-semibold">
                           {selectedLesson.title}
@@ -191,10 +184,13 @@ const Page = () => {
                           {selectedLesson.created_by}
                         </h2>
                       </div>
+
                       <Rate className="flex justify-end" />
+
                       <p className="my-5 text-justify ">
                         {selectedLesson.description}
                       </p>
+
                       <Tag color={tagColor(selectedLesson.category)}>
                         {selectedLesson.category}
                       </Tag>

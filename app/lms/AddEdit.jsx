@@ -1,11 +1,10 @@
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import React, { useEffect, useState } from "react";
-import { Button, Drawer, Input, Select, Form, Upload, message } from "antd";
+import { Button, Drawer, Input, Select, Form } from "antd";
 import { db, storage } from "../firebase.config";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import TextArea from "antd/es/input/TextArea";
 import { UserAuth } from "../contexts/AuthContext";
-import { data } from "autoprefixer";
 
 const initialState = {
   title: "",
@@ -13,6 +12,13 @@ const initialState = {
   category: "",
   URL: "",
 };
+
+const categories = [
+  { label: "Web Development", value: "Web Development" },
+  { label: "Mobile Development", value: "Mobile Development" },
+  { label: "UX & UI Design", value: "UX & UI Design" },
+  { label: "Other", value: "Other" },
+];
 
 const AddEdit = () => {
   const { user } = UserAuth();
@@ -22,7 +28,6 @@ const AddEdit = () => {
   const { title, description, category, URL } = data;
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(null);
-  const [isSubmit, setIsSubmit] = useState(false);
   const [embedLink, setEmbedLink] = useState("");
 
   useEffect(() => {
@@ -58,11 +63,13 @@ const AddEdit = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmit(true);
+
     await addDoc(collection(db, "lessons"), {
       ...data,
       timestamp: serverTimestamp(),
       created_by: user.displayName,
     });
+
     alert("successfully added");
     setData(initialState);
   };
@@ -78,13 +85,6 @@ const AddEdit = () => {
 
     setData({ ...data, URL: embedLink });
   };
-
-  const categories = [
-    { label: "Web Development", value: "Web Development" },
-    { label: "Mobile Development", value: "Mobile Development" },
-    { label: "UX & UI Design", value: "UX & UI Design" },
-    { label: "Other", value: "Other" },
-  ];
 
   return (
     <>
