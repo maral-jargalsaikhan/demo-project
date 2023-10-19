@@ -6,7 +6,7 @@ import {
   HomeOutlined,
   UnorderedListOutlined,
   VideoCameraOutlined,
-  SettingOutlined,
+  DollarOutlined,
 } from "@ant-design/icons";
 import { UserAuth } from "../contexts/AuthContext";
 
@@ -27,14 +27,14 @@ const navLinks = [
     href: "/lms",
   },
   {
-    icon: <UnorderedListOutlined />,
+    icon: <DollarOutlined />,
     title: "Expense tracker",
     href: "/expense-tracker",
   },
   {
-    icon: <SettingOutlined />,
-    title: "Settings",
-    href: "/settings",
+    icon: <UnorderedListOutlined />,
+    title: "Todo List",
+    href: "/todo-list",
   },
 ];
 

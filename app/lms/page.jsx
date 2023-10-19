@@ -1,11 +1,24 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { UserAddOutlined, VideoCameraOutlined } from "@ant-design/icons";
+import {
+  UnorderedListOutlined,
+  UserAddOutlined,
+  VideoCameraOutlined,
+} from "@ant-design/icons";
 import AddEdit from "./AddEdit";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { motion } from "framer-motion";
-import { Tag, Card, Image, Modal, Segmented, Breadcrumb, Rate } from "antd";
+import {
+  Tag,
+  Card,
+  Image,
+  Modal,
+  Segmented,
+  Breadcrumb,
+  Rate,
+  Divider,
+} from "antd";
 import "youtube-video-js";
 import Spinner from "../components/Spinner";
 
@@ -83,15 +96,16 @@ const Page = () => {
 
   return (
     <>
-      <div>
+      <div className="w-full">
         <div className="flex justify-between">
-          <h1 className="mb-5 ml-1 flex gap-3 font-semibold ">
+          <h1 className="capitalize flex gap-3 font-semibold items-center">
             <VideoCameraOutlined />
             Sample LMS
           </h1>
           <AddEdit />
         </div>
 
+        <Divider />
         <div className="flex justify-between">
           <h2 className="ml-1 font-semibold flex items-center">LESSONS</h2>
           <Segmented
@@ -99,7 +113,6 @@ const Page = () => {
             onChange={(e) => handleCategory(e)}
           />
         </div>
-
         <motion.ul
           className="container my-10 mx-auto max-w-[940px] flex flex-wrap gap-5"
           variants={container}
