@@ -1,5 +1,6 @@
 "use client";
 import { UnorderedListOutlined } from "@ant-design/icons";
+import { Divider } from "antd";
 import { addDoc, collection, onSnapshot, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import Spinner from "../components/Spinner";
@@ -42,6 +43,7 @@ const Page = () => {
             <UnorderedListOutlined />
             expense tracker
           </h1>
+          <Divider />
 
           <ExpenseForm />
           <div className="w-full flex justify-between gap-10">

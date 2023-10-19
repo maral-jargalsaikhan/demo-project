@@ -89,9 +89,13 @@ const AddEdit = () => {
   return (
     <>
       <div>
-        <Button onClick={() => setIsOpen(true)} type="default">
-          Add New Lesson
-        </Button>
+        {/* <Button onClick={() => setIsOpen(true)}>Add New Lesson</Button> */}
+        <h3
+          className="cursor-pointer font-semibold"
+          onClick={() => setIsOpen(true)}
+        >
+          Click to Add Lesson
+        </h3>
         <Drawer
           open={isOpen}
           onClose={() => setIsOpen(false)}
