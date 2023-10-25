@@ -179,11 +179,6 @@ const Page = () => {
                         ]}
                       />
                       <div className="w-full flex justify-center my-5">
-                        {/* <youtube-video
-                          width="800"
-                          height="400"
-                          src={selectedLesson.URL}
-                        /> */}
                         <iframe
                           src={selectedLesson.URL}
                           width="800"

@@ -44,9 +44,10 @@ const Login = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         open={isOpen}
+        footer={false}
         className="p-5"
       >
-        <Form className="w-10/12 mx-auto my-3">
+        {/* <Form className="w-10/12 mx-auto my-3">
           <div className="flex justify-between gap-2">
             <Form.Item className="w-full">
               <Input
@@ -72,7 +73,7 @@ const Login = () => {
             login
           </Button>
         </Form>
-        <Divider />
+        <Divider /> */}
         <Button
           onClick={loginHandler}
           className="flex items-center gap-3 mx-auto my-5 p-5 w-10/12 justify-center"
