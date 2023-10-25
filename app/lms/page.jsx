@@ -19,7 +19,6 @@ import {
   Rate,
   Divider,
 } from "antd";
-import "youtube-video-js";
 import Spinner from "../components/Spinner";
 
 const tagColor = (category) => {
@@ -180,10 +179,15 @@ const Page = () => {
                         ]}
                       />
                       <div className="w-full flex justify-center my-5">
-                        <youtube-video
+                        {/* <youtube-video
                           width="800"
                           height="400"
                           src={selectedLesson.URL}
+                        /> */}
+                        <iframe
+                          src={selectedLesson.URL}
+                          width="800"
+                          height="400"
                         />
                       </div>
 

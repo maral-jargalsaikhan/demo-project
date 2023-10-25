@@ -10,11 +10,6 @@ const initialState = {
   category: "",
 };
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-
 const categoryOptions = [
   { label: "Food", value: "Food" },
   { label: "Insurance", value: "Insurance" },

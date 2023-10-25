@@ -43,15 +43,13 @@ const AddEdit = () => {
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setProgress(progress);
         },
-        (error) => {
-          console.log(error);
-        },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setData((prev) => ({ ...prev, img: downloadURL }));
           });
         }
       );
+      console.log(file);
     };
     file && uploadFile();
   }, [file]);
