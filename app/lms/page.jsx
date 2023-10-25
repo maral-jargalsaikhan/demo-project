@@ -9,6 +9,7 @@ import AddEdit from "./AddEdit";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { motion } from "framer-motion";
+import { UserAuth } from "../contexts/AuthContext";
 import {
   Tag,
   Card,
@@ -48,6 +49,7 @@ const container = {
 const item = { hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } };
 
 const Page = () => {
+  const { user } = UserAuth();
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState(null);
@@ -101,7 +103,7 @@ const Page = () => {
             <VideoCameraOutlined />
             Sample LMS
           </h1>
-          <AddEdit />
+          {user ? <AddEdit /> : null}
         </div>
 
         <Divider />

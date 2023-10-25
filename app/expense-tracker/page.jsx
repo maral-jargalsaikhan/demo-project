@@ -36,7 +36,7 @@ const Page = () => {
       {loading ? (
         <Spinner />
       ) : !user ? (
-        <p>auth</p>
+        <p>You must be logged in to view this page.</p>
       ) : (
         <div className="w-full">
           <h1 className="capitalize mb-5 flex gap-3 font-semibold">
